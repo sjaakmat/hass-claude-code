@@ -10,7 +10,7 @@ ARG BUILD_FROM=ghcr.io/hassio-addons/base:20.0.1
 FROM alpine:3.23 AS mcp-builder
 
 RUN apk add --no-cache nodejs npm git build-base python3 && \
-    npm install -g pnpm
+    npm install -g pnpm@10
 
 WORKDIR /build
 
@@ -23,7 +23,7 @@ RUN git clone --depth 1 --branch "${DOCS_REF}" "${DOCS_REPO}" /tmp/repo && \
 
 # Install MCP server dependencies
 COPY mcp-server/package.json mcp-server/pnpm-lock.yaml* ./mcp-server/
-RUN cd mcp-server && pnpm install --frozen-lockfile 2>/dev/null || pnpm install
+RUN cd mcp-server && pnpm install --frozen-lockfile || pnpm install
 
 # Copy MCP server source
 COPY mcp-server/ ./mcp-server/
